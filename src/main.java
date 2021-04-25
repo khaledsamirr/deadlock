@@ -5,9 +5,9 @@ public class main {
         int numOfProcesses = 5;
         int numOfResources = 3;
         int need[][] = new int[numOfProcesses][numOfResources];
-        int allocated[][] = {{1, 1, 0}, {2, 0, 0}, {2, 0, 1}, {2, 0, 2}, {0, 1, 2}};
-        int max[][] = {{5, 5, 3}, {3, 2, 3}, {8, 0, 2}, {4, 2, 2}, {5, 3, 5}};
-        int available[] = {2, 5, 4};
+        int allocated[][] = {{0, 1, 0}, {2, 0, 0}, {3, 0, 2}, {2, 1, 1}, {0, 0, 2}};
+        int max[][] = {{7, 5, 3}, {3, 2, 2}, {9, 0, 2}, {2, 2, 2}, {4, 3, 3}};
+        int available[] = {3, 3, 2};
         Boolean deadLockState = true;
         String processesFinishSequence = "";
         String processesDeadLockSequence = "";
@@ -20,8 +20,9 @@ public class main {
 
         need = calcNeed(allocated, max, need);
 
+
         while (true) {
-            int j = 0;
+            int j;
 
             for (int i = 0; i < need.length; i++) {
 
@@ -31,13 +32,15 @@ public class main {
 
                     for (j = 0; j < need[0].length; j++) {
                         if (need[i][j] > available[j]) {
+                           // System.out.println(j);
                             break;
                         }
                     }
-
-                    if (j >= numOfResources) {
-                        for (int q = 0; q < numOfResources; q++) {
-                            available[q] += allocated[i][q] + need[i][q];
+                    System.out.println("P"+i);
+                    System.out.println(available[0]+""+available[1]+""+available[2]);
+                    if (j >= need[0].length) {
+                        for (int q = 0; q < need[i].length; q++) {
+                            available[q] += allocated[i][q];
                             allocated[i][q] = 0;
                             need[i][q] = 0;
                         }
