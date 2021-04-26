@@ -7,9 +7,9 @@ public class main {
         int numOfProcesses = 5;
         int numOfResources = 3;
         int need[][] = new int[numOfProcesses][numOfResources];
-        int allocated[][] = {{0, 1, 0}, {2, 0, 0}, {3, 0, 2}, {2, 1, 1}, {0, 0, 2}};
-        int max[][] = {{7, 5, 3}, {3, 2, 2}, {9, 0, 2}, {2, 2, 2}, {4, 3, 3}};
-        int available[] = {3, 3, 2};
+        int allocated[][] = {{1, 1, 0}, {2, 0, 0}, {2, 0, 1}, {2, 0, 2}, {0, 1, 2}};
+        int max[][] = {{5, 5, 3}, {3, 2, 3}, {8, 0, 2}, {4, 2, 2}, {5, 3, 5}};
+        int available[] = {2, 5, 4};
         Boolean deadLockState = true;
         String processesFinishSequence = "";
         String processesDeadLockSequence = "";
@@ -21,25 +21,38 @@ public class main {
         }
 
         need = calcNeed(allocated, max, need);
-
+        System.out.println("=====================================================");
 
         while (true) {
             int j;
 
             for (int i = 0; i < need.length; i++) {
 
+                if (processesDeadLockSequence.length() + numOfFinished(finish) >= numOfProcesses) {
+                    deadLockState = true;
+                    break;
+                }
+
                 if (!finish[i]) {
 
                     processesDeadLockSequence += i;
 
+                    System.out.println("Checking P" + i);
+                    System.out.println("----------------------------------------------");
+                    System.out.println("\t   Need" + "\t\tAvailable");
+                    System.out.println("P" + i + " |  " + need[i][0] + " " + need[i][1] + " " + need[i][2] + "\t\t" + available[0] + " " + available[1] + " " + available[2]);
+
+
                     for (j = 0; j < need[0].length; j++) {
+                        System.out.println("Checking Resource at column (" + (j + 1) + ") if it is sufficient to complete the work.");
                         if (need[i][j] > available[j]) {
+                            System.out.println("Resource is insufficient");
                             break;
                         }
                     }
-                    // System.out.println("P" + i);
-                    // System.out.println(available[0] + "" + available[1] + "" + available[2]);
+
                     if (j >= need[0].length) {
+                        System.out.println("Resources are sufficient to Finish the work of P" + i);
                         for (int q = 0; q < need[i].length; q++) {
                             available[q] += allocated[i][q];
                             allocated[i][q] = 0;
@@ -48,10 +61,17 @@ public class main {
                         processesFinishSequence += i;
                         finish[i] = true;
                         processesDeadLockSequence = "";
+                        System.out.println("P" + i + " finished it's work.");
+                    } else {
+                        System.out.println("P" + i + " Can't finish as it exceeds the available resources at column " + (j + 1));
                     }
+
+                    System.out.println("----------------------------------------------");
                 }
 
+
             }
+
 
             for (int i = 0; i < finish.length; i++) {
                 if (finish[i]) {
@@ -59,12 +79,12 @@ public class main {
                 }
             }
 
-            if (allFinishCounter >= finish.length) {
+            if (numOfFinished(finish) >= finish.length) {
                 deadLockState = false;
                 break;
             }
 
-            if (processesDeadLockSequence.length() + allFinishCounter >= need.length) {
+            if (processesDeadLockSequence.length() + numOfFinished(finish) >= numOfProcesses) {
                 deadLockState = true;
                 break;
             }
@@ -74,11 +94,11 @@ public class main {
 
         if (deadLockState) {
             System.out.println("DeadLock Sequence:");
-            for (int i = 0; i < numOfProcesses; i++) {
+            for (int i = 0; i < processesDeadLockSequence.length(); i++) {
                 System.out.print(" P" + processesDeadLockSequence.charAt(i));
             }
         } else if (!deadLockState) {
-            System.out.println("Finished Sequence:");
+            System.out.println("Safe Sequence:");
             for (int i = 0; i < numOfProcesses; i++) {
                 System.out.print(" P" + processesFinishSequence.charAt(i));
             }
@@ -148,6 +168,15 @@ public class main {
 
     }
 
+    public static int numOfFinished(Boolean finished[]) {
+        int counter = 0;
+        for (int i = 0; i < finished.length; i++) {
+            if (finished[i]) {
+                counter++;
+            }
+        }
+        return counter;
+    }
 
     public static boolean checkRequest(int[] input, int[] condition, int n) {
         int counter = 0;
