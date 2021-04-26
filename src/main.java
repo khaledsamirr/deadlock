@@ -22,8 +22,8 @@ public class main {
 
         need = calcNeed(allocated, max, need);
 
-/*
-      while (true) {
+
+        while (true) {
             int j;
 
             for (int i = 0; i < need.length; i++) {
@@ -34,12 +34,11 @@ public class main {
 
                     for (j = 0; j < need[0].length; j++) {
                         if (need[i][j] > available[j]) {
-                            // System.out.println(j);
                             break;
                         }
                     }
-                    System.out.println("P" + i);
-                    System.out.println(available[0] + "" + available[1] + "" + available[2]);
+                    // System.out.println("P" + i);
+                    // System.out.println(available[0] + "" + available[1] + "" + available[2]);
                     if (j >= need[0].length) {
                         for (int q = 0; q < need[i].length; q++) {
                             available[q] += allocated[i][q];
@@ -71,9 +70,9 @@ public class main {
             }
 
         }
-      */
 
-    /*    if (deadLockState) {
+
+        if (deadLockState) {
             System.out.println("DeadLock Sequence:");
             for (int i = 0; i < numOfProcesses; i++) {
                 System.out.print(" P" + processesDeadLockSequence.charAt(i));
@@ -85,104 +84,103 @@ public class main {
             }
         }
 
-     */
+        System.out.println();
 
         Scanner scanner = new Scanner(System.in);
-        String cmd="";
+        String cmd = "";
         String[] cmds = new String[0];
-        String [] num = new String[0];
-        int m=0;
-        int [] request = new int[3];
+        String[] num = new String[0];
+        int m = 0;
+        int[] request = new int[3];
         boolean flag;
-        while (!cmd.equals("quit")){
+        while (!cmd.equals("quit")) {
             System.out.println("Enter command:");
-            cmd=scanner.nextLine();
+            cmd = scanner.nextLine();
             cmds = cmd.split(" ");
-            num=cmds[1].split("");
-            m=Integer.parseInt(num[1]);
-            for(int i=0;i<cmds.length-2;i++){
-                request[i]=Integer.parseInt(cmds[i+2]);
+            num = cmds[1].split("");
+            m = Integer.parseInt(num[1]);
+            for (int i = 0; i < cmds.length - 2; i++) {
+                request[i] = Integer.parseInt(cmds[i + 2]);
             }
-            if(cmds[0].equals("RQ")){
-                flag=checkRequest(request,available,cmds.length-2);
-                if(flag){
-                    for(int i=0;i<cmds.length-2;i++){
-                        allocated[m][i]+=request[i];
-                        need[m][i]=max[m][i]-allocated[m][i];
-                        available[i]-=request[i];
+            if (cmds[0].equals("RQ")) {
+                flag = checkRequest(request, available, cmds.length - 2);
+                if (flag) {
+                    for (int i = 0; i < cmds.length - 2; i++) {
+                        allocated[m][i] += request[i];
+                        need[m][i] = max[m][i] - allocated[m][i];
+                        available[i] -= request[i];
                     }
                     System.out.println("Allocated: ");
                     print2D(allocated);
                     System.out.println("Need: ");
                     print2D(need);
-                    System.out.println("Available: "+ Arrays.toString(available));
+                    System.out.println("Available: " + Arrays.toString(available));
 
-                }
-                else{
+                } else {
                     System.out.println("can't request!");
                 }
 
-            }
-            else if(cmds[0].equals("RL")){
-                flag=checkRelease(request,allocated,m,cmds.length-2);
-                if(flag){
-                    for(int i=0;i<cmds.length-2;i++){
-                        allocated[m][i]-=request[i];
-                        need[m][i]=max[m][i]-allocated[m][i];
-                        available[i]+=request[i];
+            } else if (cmds[0].equals("RL")) {
+                flag = checkRelease(request, allocated, m, cmds.length - 2);
+                if (flag) {
+                    for (int i = 0; i < cmds.length - 2; i++) {
+                        allocated[m][i] -= request[i];
+                        need[m][i] = max[m][i] - allocated[m][i];
+                        available[i] += request[i];
                     }
                     System.out.println("Allocated: ");
                     print2D(allocated);
                     System.out.println("Need: ");
                     print2D(need);
-                    System.out.println("Available: "+ Arrays.toString(available));
+                    System.out.println("Available: " + Arrays.toString(available));
 
-                }else{
+                } else {
                     System.out.println("can't release!");
                 }
 
-            }
-            else if(cmds[0].equals("quit")){
+            } else if (cmds[0].equals("quit")) {
                 break;
-            }
-            else{
+            } else {
                 System.out.println("Wrong command, please enter a valid one!");
             }
         }
 
 
-
     }
 
 
-    
-    public static boolean checkRequest(int[] input,int[]condition,int n){
-        int counter=0;
-        for(int i=0;i<n;i++){
-            if(input[i]<=condition[i]){
+    public static boolean checkRequest(int[] input, int[] condition, int n) {
+        int counter = 0;
+        for (int i = 0; i < n; i++) {
+            if (input[i] <= condition[i]) {
                 counter++;
             }
         }
-        if(counter==n)
+        if (counter == n)
             return true;
         else
             return false;
 
-    };
+    }
 
-    public static boolean checkRelease(int[] input,int[][] allo,int m,int n){
-        int counter=0;
-        for(int i=0;i<n;i++){
-            if(input[i]<=allo[m][i]){
+    ;
+
+    public static boolean checkRelease(int[] input, int[][] allo, int m, int n) {
+        int counter = 0;
+        for (int i = 0; i < n; i++) {
+            if (input[i] <= allo[m][i]) {
                 counter++;
             }
         }
-        if(counter==n)
+        if (counter == n)
             return true;
         else
             return false;
 
-    };
+    }
+
+    ;
+
     public static int[][] calcNeed(int allocated[][], int max[][], int need[][]) {
         for (int i = 0; i < allocated.length; i++) {
             for (int j = 0; j < allocated[i].length; j++) {
@@ -192,8 +190,8 @@ public class main {
 
         return need;
     }
-    public static void print2D(int mat[][])
-    {
+
+    public static void print2D(int mat[][]) {
         for (int i = 0; i < mat.length; i++) {
 
             for (int j = 0; j < mat[i].length; j++) {
