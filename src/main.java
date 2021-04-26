@@ -98,15 +98,13 @@ public class main {
             System.out.println("Enter command:");
             cmd=scanner.nextLine();
             cmds = cmd.split(" ");
-
+            num=cmds[1].split("");
+            m=Integer.parseInt(num[1]);
+            for(int i=0;i<cmds.length-2;i++){
+                request[i]=Integer.parseInt(cmds[i+2]);
+            }
             if(cmds[0].equals("RQ")){
-                num=cmds[1].split("");
-                m=Integer.parseInt(num[1]);
-                System.out.println(m);
-                for(int i=0;i<cmds.length-2;i++){
-                     request[i]=Integer.parseInt(cmds[i+2]);
-                }
-                flag=checkTrue(request,available,cmds.length-2);
+                flag=checkRequest(request,available,cmds.length-2);
                 if(flag){
                     for(int i=0;i<cmds.length-2;i++){
                         allocated[m][i]+=request[i];
@@ -120,9 +118,28 @@ public class main {
                     System.out.println("Available: "+ Arrays.toString(available));
 
                 }
+                else{
+                    System.out.println("can't request!");
+                }
 
             }
             else if(cmds[0].equals("RL")){
+                flag=checkRelease(request,allocated,m,cmds.length-2);
+                if(flag){
+                    for(int i=0;i<cmds.length-2;i++){
+                        allocated[m][i]-=request[i];
+                        need[m][i]=max[m][i]-allocated[m][i];
+                        available[i]+=request[i];
+                    }
+                    System.out.println("Allocated: ");
+                    print2D(allocated);
+                    System.out.println("Need: ");
+                    print2D(need);
+                    System.out.println("Available: "+ Arrays.toString(available));
+
+                }else{
+                    System.out.println("can't release!");
+                }
 
             }
             else if(cmds[0].equals("quit")){
@@ -139,10 +156,24 @@ public class main {
 
 
     
-    public static boolean checkTrue(int[] input,int[]condition,int n){
+    public static boolean checkRequest(int[] input,int[]condition,int n){
         int counter=0;
         for(int i=0;i<n;i++){
             if(input[i]<=condition[i]){
+                counter++;
+            }
+        }
+        if(counter==n)
+            return true;
+        else
+            return false;
+
+    };
+
+    public static boolean checkRelease(int[] input,int[][] allo,int m,int n){
+        int counter=0;
+        for(int i=0;i<n;i++){
+            if(input[i]<=allo[m][i]){
                 counter++;
             }
         }
