@@ -1,3 +1,5 @@
+import jdk.swing.interop.SwingInterOpUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -10,7 +12,7 @@ public class main {
         int allocated[][] = {{1, 1, 0}, {2, 0, 0}, {2, 0, 1}, {2, 0, 2}, {0, 1, 2}};
         int max[][] = {{5, 5, 3}, {3, 2, 3}, {8, 0, 2}, {4, 2, 2}, {5, 3, 5}};
         int or_available[] = {2, 5, 4};
-        int available[] = or_available;
+        int available[];
 
         Boolean deadLockState = true;
         String processesFinishSequence = "";
@@ -23,10 +25,13 @@ public class main {
         int m = 0;
         int[] request = new int[3];
         boolean flag;
+        boolean checking = false;
 
         while (!cmd.equals("quit")) {
-
-            available = or_available;
+            deadLockState = false;
+            processesDeadLockSequence = "";
+            processesFinishSequence = "";
+            available = or_available.clone();
 
             for (int i = 0; i < numOfProcesses; i++) {
                 finish[i] = false;
@@ -100,10 +105,23 @@ public class main {
                 for (int i = 0; i < processesDeadLockSequence.length(); i++) {
                     System.out.print(" P" + processesDeadLockSequence.charAt(i));
                 }
+                System.out.println();
+                if (checking) {
+                    System.out.println("Request is Refused!");
+                    for (int i = 0; i < cmds.length - 2; i++) {
+                        allocated[m][i] -= request[i];
+                        need[m][i] += request[i];
+                        or_available[i] += request[i];
+                    }
+                }
             } else if (!deadLockState) {
                 System.out.println("Safe Sequence:");
                 for (int i = 0; i < numOfProcesses; i++) {
                     System.out.print(" P" + processesFinishSequence.charAt(i));
+                }
+                System.out.println();
+                if (checking) {
+                    System.out.println("Request is Approved!");
                 }
             }
 
@@ -113,8 +131,12 @@ public class main {
             System.out.println("Enter command:");
             cmd = scanner.nextLine();
             cmds = cmd.split(" ");
+            if (cmds[0].equalsIgnoreCase("quit")) {
+                break;
+            }
             num = cmds[1].split("");
             m = Integer.parseInt(num[1]);
+
             for (int i = 0; i < cmds.length - 2; i++) {
                 request[i] = Integer.parseInt(cmds[i + 2]);
             }
@@ -131,6 +153,7 @@ public class main {
                     System.out.println("Need: ");
                     print2D(need);
                     System.out.println("Available: " + Arrays.toString(or_available));
+                    checking = true;
 
                 } else {
                     System.out.println("can't request!");
@@ -149,6 +172,7 @@ public class main {
                     System.out.println("Need: ");
                     print2D(need);
                     System.out.println("Available: " + Arrays.toString(or_available));
+                    checking = false;
 
                 } else {
                     System.out.println("can't release!");
@@ -160,7 +184,6 @@ public class main {
                 System.out.println("Wrong command, please enter a valid one!");
             }
         }
-
 
     }
 
