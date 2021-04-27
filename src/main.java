@@ -107,12 +107,13 @@ public class main {
             System.out.println("Enter command:");
             cmd = scanner.nextLine();
             cmds = cmd.split(" ");
-            num = cmds[1].split("");
-            m = Integer.parseInt(num[1]);
-            for (int i = 0; i < cmds.length - 2; i++) {
-                request[i] = Integer.parseInt(cmds[i + 2]);
-            }
+
             if (cmds[0].equals("RQ")) {
+                num = cmds[1].split("");
+                m = Integer.parseInt(num[1]);
+                for (int i = 0; i < cmds.length - 2; i++) {
+                    request[i] = Integer.parseInt(cmds[i + 2]);
+                }
                 flag = checkRequest(request, available, need, m, cmds.length - 2);
                 if (flag) {
                     for (int i = 0; i < cmds.length - 2; i++) {
@@ -131,6 +132,11 @@ public class main {
                 }
 
             } else if (cmds[0].equals("RL")) {
+                num = cmds[1].split("");
+                m = Integer.parseInt(num[1]);
+                for (int i = 0; i < cmds.length - 2; i++) {
+                    request[i] = Integer.parseInt(cmds[i + 2]);
+                }
                 flag = checkRelease(request, allocated, need, m, cmds.length - 2);
                 if (flag) {
                     for (int i = 0; i < cmds.length - 2; i++) {
