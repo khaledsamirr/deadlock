@@ -55,8 +55,6 @@ public class main {
                         System.out.println("Resources are sufficient to Finish the work of P" + i);
                         for (int q = 0; q < need[i].length; q++) {
                             available[q] += allocated[i][q];
-                           // allocated[i][q] = 0;
-                         //   need[i][q] = 0;
                         }
                         processesFinishSequence += i;
                         finish[i] = true;
