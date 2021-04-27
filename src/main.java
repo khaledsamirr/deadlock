@@ -55,8 +55,8 @@ public class main {
                         System.out.println("Resources are sufficient to Finish the work of P" + i);
                         for (int q = 0; q < need[i].length; q++) {
                             available[q] += allocated[i][q];
-                            allocated[i][q] = 0;
-                            need[i][q] = 0;
+                           // allocated[i][q] = 0;
+                         //   need[i][q] = 0;
                         }
                         processesFinishSequence += i;
                         finish[i] = true;
@@ -123,11 +123,11 @@ public class main {
                 request[i] = Integer.parseInt(cmds[i + 2]);
             }
             if (cmds[0].equals("RQ")) {
-                flag = checkRequest(request, available, cmds.length - 2);
+                flag = checkRequest(request, available, need,m,cmds.length - 2);
                 if (flag) {
                     for (int i = 0; i < cmds.length - 2; i++) {
                         allocated[m][i] += request[i];
-                        need[m][i] = max[m][i] - allocated[m][i];
+                        need[m][i] -= request[i];
                         available[i] -= request[i];
                     }
                     System.out.println("Allocated: ");
@@ -141,11 +141,11 @@ public class main {
                 }
 
             } else if (cmds[0].equals("RL")) {
-                flag = checkRelease(request, allocated, m, cmds.length - 2);
+                flag = checkRelease(request, allocated,need, m, cmds.length - 2);
                 if (flag) {
                     for (int i = 0; i < cmds.length - 2; i++) {
                         allocated[m][i] -= request[i];
-                        need[m][i] = max[m][i] - allocated[m][i];
+                        need[m][i] += request[i];
                         available[i] += request[i];
                     }
                     System.out.println("Allocated: ");
@@ -178,15 +178,24 @@ public class main {
         return counter;
     }
 
-    public static boolean checkRequest(int[] input, int[] condition, int n) {
+    public static boolean checkRequest(int[] input, int[] condition,int[][] need,int m, int n) {
         int counter = 0;
         for (int i = 0; i < n; i++) {
             if (input[i] <= condition[i]) {
                 counter++;
             }
         }
-        if (counter == n)
-            return true;
+        if (counter == n){
+            counter = 0;
+             for (int i = 0; i < n; i++) {
+                if (input[i] <= need[m][i])
+                    counter++;
+            }
+            if (counter == n)
+                return true;
+            else
+                return false;
+        }
         else
             return false;
 
@@ -194,15 +203,16 @@ public class main {
 
     ;
 
-    public static boolean checkRelease(int[] input, int[][] allo, int m, int n) {
+    public static boolean checkRelease(int[] input, int[][] allo,int [][] need, int m, int n) {
         int counter = 0;
         for (int i = 0; i < n; i++) {
             if (input[i] <= allo[m][i]) {
                 counter++;
             }
         }
-        if (counter == n)
+        if (counter == n) {
             return true;
+        }
         else
             return false;
 
