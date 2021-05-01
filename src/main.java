@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
+/*  Name: Youssef Ahmed Abdel Hafez   ID: 20180337
+    Name: Khaled Samir Omar           ID: 20180095*/
+
 public class main {
     public static void main(String args[]) {
         int numOfProcesses = 5;
